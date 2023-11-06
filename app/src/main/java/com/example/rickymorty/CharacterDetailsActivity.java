@@ -61,6 +61,33 @@ public class CharacterDetailsActivity extends AppCompatActivity {
                 }
             }
         });
+        Button removeFromFavoritesButton = findViewById(R.id.removeFromFavoriteButton);
+        removeFromFavoritesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Obtén la información del personaje nuevamente
+                // Elimina el personaje de favoritos en la base de datos
+
+                SQLiteDatabase database = dbHelper.getWritableDatabase();
+
+                String characterId = String.valueOf(character.getId()); // Obtén el ID del personaje
+
+                // Define la cláusula WHERE para eliminar el personaje por ID
+                String selection = FavoriteCharacterDbHelper.COLUMN_NAME + " = ?";
+                String[] selectionArgs = { characterId };
+
+                int deletedRows = database.delete(FavoriteCharacterDbHelper.TABLE_FAVORITE_CHARACTERS, selection, selectionArgs);
+
+                if (deletedRows > 0) {
+                    // Éxito: el personaje se eliminó de favoritos
+                    Toast.makeText(CharacterDetailsActivity.this, "Personaje eliminado de favoritos", Toast.LENGTH_SHORT).show();
+                } else {
+                    // Error: no se pudo eliminar el personaje
+                    Log.e("TAG", "Error al eliminar el personaje de favoritos");
+                    Toast.makeText(CharacterDetailsActivity.this, "Error al eliminar el personaje de favoritos", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
 
         // Busca el botón de compartir y configura el listener

@@ -27,8 +27,6 @@ public class Character implements Serializable {
         this.gender = gender;
     }
 
-    // Resto de los métodos de la clase
-    // ...
 
     public List<String> getEpisodeUrls() {
         return episodeUrls;
