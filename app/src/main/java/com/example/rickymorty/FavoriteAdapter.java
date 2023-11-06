@@ -1,7 +1,6 @@
 package com.example.rickymorty;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,8 +41,6 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Charac
     public void onBindViewHolder(@NonNull CharacterViewHolder holder, int position) {
         Character character = characterList.get(position);
         holder.characterName.setText(character.getName());
-        holder.characterStatus.setText(character.getStatus());
-        holder.characterLocation.setText("Location: " + character.getLocation().getName());
 
 
         // Utiliza Glide para cargar la imagen del personaje
@@ -51,17 +48,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Charac
                 .load(character.getImage())
                 .into(holder.characterImage);
 
-        // Agrega un listener para abrir CharacterDetailsActivity cuando se hace clic en un elemento
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Configura un Intent para abrir CharacterDetailsActivity
-                Intent intent = new Intent(context, CharacterDetailsActivity.class);
-                // Envía el objeto Character al Activity
-                intent.putExtra("character", character);
-                context.startActivity(intent);
-            }
-        });
+
     }
 
     @Override

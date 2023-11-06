@@ -123,7 +123,7 @@ public class FavoriteCharactersActivity extends AppCompatActivity {
                 null  // No ordenar las filas
         );
 
-        // Recorre el cursor y agrega los nombres de Pokémon a la lista
+        // Recorre el cursor y agrega los nombres de character a la lista
         while (cursor.moveToNext()) {
             String characterName = cursor.getString(cursor.getColumnIndexOrThrow(FavoriteCharacterDbHelper.COLUMN_NAME));
             characterNamesFromDatabase.add(characterName);
