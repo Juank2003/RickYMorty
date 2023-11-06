@@ -1,16 +1,22 @@
 package com.example.rickymorty;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import androidx.appcompat.app.AppCompatActivity;
 import android.widget.Button;
+import android.widget.Toast;
 
 public class CharacterDetailsActivity extends AppCompatActivity {
     private WebView webView;
+    private FavoriteCharacterDbHelper dbHelper = new FavoriteCharacterDbHelper(CharacterDetailsActivity.this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +36,32 @@ public class CharacterDetailsActivity extends AppCompatActivity {
 
         // Configura un WebViewClient para abrir enlaces internos en el WebView
         webView.setWebViewClient(new WebViewClient());
+
+
+        Button addToFavoritesButton = findViewById(R.id.addToFavoriteButton);
+        addToFavoritesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Obtén la información del personaje nuevamente
+                // Inserta el personaje favorito en la base de datos
+
+                SQLiteDatabase database = dbHelper.getWritableDatabase();
+
+                ContentValues values = new ContentValues();
+
+                values.put(FavoriteCharacterDbHelper.COLUMN_NAME,character.getId());// Obtén los valores después de configurarlos
+                long rowId = database.insert(FavoriteCharacterDbHelper.TABLE_FAVORITE_CHARACTERS, null, values);
+                if (rowId != -1) {
+                    // Éxito: el personaje se guardó en favoritos
+                    Toast.makeText(CharacterDetailsActivity.this, "Personaje guardado en favoritos", Toast.LENGTH_SHORT).show();
+                } else {
+                    // Error: no se pudo guardar el personaje
+                    Log.e("TAG", "Error al guardar el personaje en favoritos");
+                    Toast.makeText(CharacterDetailsActivity.this, "Error al guardar el personaje en favoritos", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
 
         // Busca el botón de compartir y configura el listener
         Button shareButton = findViewById(R.id.shareButton);
@@ -58,16 +90,20 @@ public class CharacterDetailsActivity extends AppCompatActivity {
     // Método para generar el contenido HTML que muestra la información del personaje
     private String generateCharacterHtml(Character character) {
         String html = "<html><body>";
-        html += "<h1>" + character.getName() + "</h1>";
-        html += "<p>Status: " + character.getStatus() + "</p>";
-        html += "<p>Species: " + character.getSpecies() + "</p>";
-        html += "<p>Gender: " + character.getGender() + "</p>";
-        html += "<p>Origin: " + character.getLocation().getName() + "</p>";
-
-        // Agrega la etiqueta de imagen para mostrar la imagen del personaje
-        html += "<img src='" + character.getImage() + "' alt='" + character.getName() + "' style='max-width:100%;height:auto;'>";
-
-        // Agrega aquí más información si es necesario
+        if (character != null) {
+            html += "<h1>" + character.getName() + "</h1>";
+            html += "<p>Status: " + character.getStatus() + "</p>";
+            html += "<p>Species: " + character.getSpecies() + "</p>";
+            html += "<p>Gender: " + character.getGender() + "</p>";
+            if (character.getLocation() != null) {
+                html += "<p>Origin: " + character.getLocation().getName() + "</p>";
+            }
+            if (!TextUtils.isEmpty(character.getImage())) {
+                // Agrega la etiqueta de imagen solo si la URL de la imagen no está vacía
+                html += "<img src='" + character.getImage() + "' alt='" + character.getName() + "' style='max-width:100%;height:auto;'>";
+            }
+            // Agrega aquí más información si es necesario
+        }
         html += "</body></html>";
         return html;
     }

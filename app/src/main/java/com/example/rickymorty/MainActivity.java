@@ -6,6 +6,7 @@ import android.os.Looper;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -35,6 +36,11 @@ public class MainActivity extends AppCompatActivity {
     private CharacterAdapter characterAdapter;
     private Retrofit retrofit;
     private RickAndMortyApi api;
+    private Spinner statusSpinner;
+
+    private String[] statusOptions = {"All", "Alive", "Dead", "Unknown"};
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         api = retrofit.create(RickAndMortyApi.class);
+
+        
         Button viewFavoritesButton = findViewById(R.id.viewFavoritesButton);
 
         viewFavoritesButton.setOnClickListener(new View.OnClickListener() {

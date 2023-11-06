@@ -8,6 +8,7 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import retrofit2.http.Url;
 
 public interface RickAndMortyApi {
     @GET("character")
@@ -15,4 +16,7 @@ public interface RickAndMortyApi {
 
     @GET("episode/{ids}") // Cambiamos el nombre del parámetro a "ids"
     Call<JsonArray> getEpisodes(@Path("ids") String ids); // Cambiamos el tipo de retorno a JsonArray
+
+    @GET
+    Call<Character> getInfoCharacter(@Url String url);
 }

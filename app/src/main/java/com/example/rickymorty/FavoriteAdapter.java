@@ -1,5 +1,5 @@
-// CharacterAdapter.java
 package com.example.rickymorty;
+
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -7,18 +7,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.CharacterViewHolder> {
+
+public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.CharacterViewHolder> {
     private Context context;
     private List<Character> characterList;
 
-    public CharacterAdapter(Context context) {
+    public FavoriteAdapter(Context context) {
         this.context = context;
         this.characterList = new ArrayList<>(); // Inicializa la lista aquí
     }
@@ -41,15 +44,6 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.Char
         holder.characterName.setText(character.getName());
         holder.characterStatus.setText(character.getStatus());
         holder.characterLocation.setText("Location: " + character.getLocation().getName());
-
-        // Obtener el nombre del primer episodio
-        List<Episode> episodes = character.getEpisodes();
-        if (episodes != null && !episodes.isEmpty()) {
-            Episode firstEpisode = episodes.get(0);
-            holder.characterEpisode.setText("Episode: " + firstEpisode.getName());
-        } else {
-            holder.characterEpisode.setText("Episode: N/A");
-        }
 
         // Utiliza Glide para cargar la imagen del personaje
         Glide.with(context)
@@ -78,7 +72,6 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.Char
         TextView characterName;
         TextView characterStatus;
         TextView characterLocation;
-        TextView characterEpisode;
         ImageView characterImage;
 
         CharacterViewHolder(View itemView) {
@@ -86,7 +79,6 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.Char
             characterName = itemView.findViewById(R.id.nombre);
             characterStatus = itemView.findViewById(R.id.estado);
             characterLocation = itemView.findViewById(R.id.ubicacion);
-            characterEpisode = itemView.findViewById(R.id.episodio);
             characterImage = itemView.findViewById(R.id.characterImageView);
         }
     }
