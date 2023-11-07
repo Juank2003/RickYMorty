@@ -91,10 +91,62 @@ public class MainActivity extends AppCompatActivity {
                         List<Character> characters = characterList.getResults();
                         allCharacters = characters;
 
-                        filterCharactersByStatus(selectedStatus);
+                        // Obtén la lista de IDs de episodios de todos los personajes
+                        List<Integer> episodeIdsList = new ArrayList<>();
+                        for (Character character : characters) {
+                            List<String> episodeUrls = character.getEpisodeUrls();
+                            for (String episodeUrl : episodeUrls) {
+                                String[] segments = episodeUrl.split("/");
+                                int episodeId = Integer.parseInt(segments[segments.length - 1]);
+                                episodeIdsList.add(episodeId);
+                            }
+                        }
+
+                        // Realiza la solicitud para obtener todos los episodios requeridos
+                        String episodeIds = TextUtils.join(",", episodeIdsList); // Convierte la lista de identificadores en una cadena separada por comas
+                        Call<JsonArray> episodesCall = api.getEpisodes(episodeIds);
+                        episodesCall.enqueue(new Callback<JsonArray>() {
+                            @Override
+                            public void onResponse(Call<JsonArray> call, Response<JsonArray> response) {
+                                if (response.isSuccessful()) {
+                                    JsonArray jsonArray = response.body();
+                                    List<Episode> episodes = new ArrayList<>();
+
+                                    for (int i = 0; i < jsonArray.size(); i++) {
+                                        JsonObject episodeJson = jsonArray.get(i).getAsJsonObject();
+                                        Episode episode = new Episode();
+                                        episode.setId(episodeJson.get("id").getAsInt());
+                                        episode.setName(episodeJson.get("name").getAsString());
+                                        episodes.add(episode);
+                                    }
+
+                                    // Asigna los episodios a los personajes correspondientes
+                                    for (Character character : characters) {
+                                        List<String> characterEpisodeUrls = character.getEpisodeUrls();
+                                        List<Episode> characterEpisodes = new ArrayList<>();
+                                        for (String episodeUrl : characterEpisodeUrls) {
+                                            String[] segments = episodeUrl.split("/");
+                                            int episodeId = Integer.parseInt(segments[segments.length - 1]);
+                                            // Busca el episodio correspondiente por su identificador
+                                            for (Episode episode : episodes) {
+                                                if (episode.getId() == episodeId) {
+                                                    characterEpisodes.add(episode);
+                                                }
+                                            }
+                                        }
+                                        character.setEpisodes(characterEpisodes);
+                                    }
+
+                                    filterCharactersByStatus(selectedStatus);
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<JsonArray> call, Throwable t) {
+                                Toast.makeText(MainActivity.this, "Error al obtener datos de episodios", Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     }
-                } else {
-                    Toast.makeText(MainActivity.this, "Error al obtener datos de la API", Toast.LENGTH_SHORT).show();
                 }
             }
 
