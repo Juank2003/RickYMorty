@@ -15,9 +15,21 @@ public class Character implements Serializable {
     private String image;
     private Location location;
     private String gender;  // Agregamos el atributo gender
+    @SerializedName("origin")
+    private Location origin;
+
+    public Location getOrigin() {
+        return origin;
+    }
+
+    public void setOrigin(Location origin) {
+        this.origin = origin;
+    }
+
     @SerializedName("episode")
     private List<String> episodeUrls;
     private List<Episode> episodes;
+
 
     public String getGender() {
         return gender;

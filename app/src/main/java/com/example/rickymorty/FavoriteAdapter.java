@@ -43,6 +43,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Charac
         holder.characterName.setText(character.getName());
 
 
+
         // Utiliza Glide para cargar la imagen del personaje
         Glide.with(context)
                 .load(character.getImage())
