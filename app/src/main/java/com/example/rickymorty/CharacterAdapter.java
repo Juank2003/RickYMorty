@@ -14,20 +14,24 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 import java.util.List;
 
+// Adaptador para el RecyclerView que maneja la visualización de personajes.
 public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.CharacterViewHolder> {
     private Context context;
     private List<Character> characterList;
 
+    // Constructor del adaptador
     public CharacterAdapter(Context context) {
         this.context = context;
-        this.characterList = new ArrayList<>(); // Inicializa la lista aquí
+        this.characterList = new ArrayList<>();
     }
 
+    // Establece los datos del personaje y notifica al adaptador para refrescar la lista
     public void setData(List<Character> characterList) {
         this.characterList = characterList;
         notifyDataSetChanged();
     }
 
+    // Crea nuevas vistas (invocadas por el layout manager)
     @NonNull
     @Override
     public CharacterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -35,6 +39,7 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.Char
         return new CharacterViewHolder(view);
     }
 
+    // Reemplaza el contenido de una vista (invocado por el layout manager)
     @Override
     public void onBindViewHolder(@NonNull CharacterViewHolder holder, int position) {
         Character character = characterList.get(position);
@@ -56,7 +61,7 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.Char
                 .load(character.getImage())
                 .into(holder.characterImage);
 
-        // Agrega un listener para abrir CharacterDetailsActivity cuando se hace clic en un elemento
+        // Configura un listener para abrir una actividad detallada cuando se toca un personaje
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -69,11 +74,13 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.Char
         });
     }
 
+    // Devuelve el tamaño de la lista de datos (invocado por el layout manager)
     @Override
     public int getItemCount() {
         return characterList != null ? characterList.size() : 0;
     }
 
+    // Proporciona una referencia a las vistas para cada ítem de
     static class CharacterViewHolder extends RecyclerView.ViewHolder {
         TextView characterName;
         TextView characterStatus;
@@ -81,6 +88,7 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.Char
         TextView characterEpisode;
         ImageView characterImage;
 
+        // Constructor del ViewHolder para inicializar la UI
         CharacterViewHolder(View itemView) {
             super(itemView);
             characterName = itemView.findViewById(R.id.nombre);

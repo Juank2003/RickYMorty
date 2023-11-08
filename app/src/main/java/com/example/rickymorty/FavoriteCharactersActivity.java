@@ -1,3 +1,4 @@
+// FavoriteCharactersActivity
 package com.example.rickymorty;
 
 import android.database.Cursor;
@@ -17,17 +18,25 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
+// Actividad que muestra una lista de personajes favoritos del usuario.
 public class FavoriteCharactersActivity extends AppCompatActivity {
 
+    // Vistas y adaptadores para la UI
     private RecyclerView favoritesRecyclerView;
     private FavoriteAdapter favoritesAdapter;
+
+    // Listas para almacenar los personajes y sus nombres (ids)
     private List<Character> favoriteCharacterList;
     private List<String> favoriteCharacterNames;
+
+    // Base de datos y API helpers
     private FavoriteCharacterDbHelper dbHelper;
     private SQLiteDatabase database;
     private RickAndMortyApi api;
+    private Retrofit retrofit;
+
+
 
 
     @Override
@@ -35,29 +44,31 @@ public class FavoriteCharactersActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favorite_characters);
 
+        // Inicialización y configuración de la base de datos y RecyclerView.
         dbHelper = new FavoriteCharacterDbHelper(this);
         database = dbHelper.getWritableDatabase();
 
+        // Configura Retrofit y la instancia de la API para cargar detalles de los personajes favoritos.
         favoriteCharacterList = new ArrayList<>();
         favoriteCharacterNames = loadFavoriteCharacters();
 
+        // Método para cargar los nombres de los personajes favoritos de la base de datos.
         favoritesRecyclerView = findViewById(R.id.recyclerViewFavoriteCharacters);
         favoritesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        // Carga los detalles completos de cada personaje favorito.
         favoritesAdapter = new FavoriteAdapter(this);
         favoritesAdapter.setData(favoriteCharacterList);
         favoritesRecyclerView.setAdapter(favoritesAdapter);
 
         // Configura Retrofit para conectarte a la API de Rick and Morty
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://rickandmortyapi.com/api/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+        retrofit = ApiClient.getClient();
         api = retrofit.create(RickAndMortyApi.class);
 
         loadDetailsForFavoriteCharacters();
     }
 
+    // Método para cargar los nombres de los personajes favoritos.
     private List<String> loadFavoriteCharacters() {
         List<String> favoriteCharacterNames = loadFavoriteCharacterNames();
 
@@ -65,12 +76,15 @@ public class FavoriteCharactersActivity extends AppCompatActivity {
         return favoriteCharacterNames;
     }
 
+    // Realiza llamadas a la API para obtener detalles de cada personaje favorito por su ID y actualiza la UI.
     private void loadDetailsForFavoriteCharacters() {
+        // Itera sobre los IDs de los personajes favoritos para obtener sus detalles
         for (final String idCharacter : favoriteCharacterNames) {
             // Construye la URL de la API para obtener los detalles del Pokémon
             String apiUrl = "https://rickandmortyapi.com/api/character/" + idCharacter;
             Character character = new Character();
 
+            // Llamada a la API para obtener información detallada de cada personaje
             Call<Character> call = api.getInfoCharacter(apiUrl);
 
             call.enqueue(new Callback<Character>() {
@@ -102,6 +116,7 @@ public class FavoriteCharactersActivity extends AppCompatActivity {
     }
 
 
+    // Consulta la base de datos para obtener los nombres (IDs) de los personajes favoritos.
     private List<String> loadFavoriteCharacterNames() {
         List<String> characterNamesFromDatabase = new ArrayList<>();
 

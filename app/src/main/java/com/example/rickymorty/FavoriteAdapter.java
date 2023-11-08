@@ -1,3 +1,4 @@
+// FavoriteAdapter
 package com.example.rickymorty;
 
 import android.content.Context;
@@ -15,7 +16,7 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 import java.util.List;
 
-
+// Adaptador para el RecyclerView que muestra los personajes favoritos.
 public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.CharacterViewHolder> {
     private Context context;
     private List<Character> characterList;
@@ -25,11 +26,13 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Charac
         this.characterList = new ArrayList<>(); // Inicializa la lista aquí
     }
 
+    // Método para actualizar los datos del adaptador y refrescar la vista.
     public void setData(List<Character> characterList) {
         this.characterList = characterList;
         notifyDataSetChanged();
     }
 
+    // Infla el layout para cada ítem del RecyclerView.
     @NonNull
     @Override
     public CharacterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -37,6 +40,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Charac
         return new CharacterViewHolder(view);
     }
 
+    // Vincula cada personaje a un ViewHolder.
     @Override
     public void onBindViewHolder(@NonNull CharacterViewHolder holder, int position) {
         Character character = characterList.get(position);
@@ -52,11 +56,13 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Charac
 
     }
 
+    // Devuelve la cantidad de ítems en el adaptador.
     @Override
     public int getItemCount() {
         return characterList != null ? characterList.size() : 0;
     }
 
+    // ViewHolder que contiene la UI para cada personaje.
     static class CharacterViewHolder extends RecyclerView.ViewHolder {
         TextView characterName;
         TextView characterStatus;

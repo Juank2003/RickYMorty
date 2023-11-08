@@ -1,20 +1,25 @@
+// CharacterDetailsActivity
 package com.example.rickymorty;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+// Esta actividad muestra los detalles de un personaje seleccionado.
 public class CharacterDetailsActivity extends AppCompatActivity {
     private WebView webView;
     private FavoriteCharacterDbHelper dbHelper = new FavoriteCharacterDbHelper(CharacterDetailsActivity.this);
@@ -25,24 +30,30 @@ public class CharacterDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_character_details);
 
-        // Obtén la información del personaje enviado desde MainActivity
+        // Recupera el personaje que fue pasado como extra desde la MainActivity.
         final Character character = (Character) getIntent().getSerializableExtra("character");
 
         webView = findViewById(R.id.webView);
+        // Habilita JavaScript para el webView.
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
 
-        // Carga la información del personaje en el WebView
+        // Carga los datos del personaje en formato HTML en el webView.
         String htmlData = generateCharacterHtml(character);
         webView.loadData(htmlData, "text/html", "UTF-8");
 
-        // Configura un WebViewClient para abrir enlaces internos en el WebView
+        // Establece WebViewClient para manejar eventos de navegación dentro del webView.
         webView.setWebViewClient(new WebViewClient());
 
+        // Configura el checkBox para marcar como favorito.
         favoriteCheckBox = findViewById(R.id.favoriteCheckBox);
+
+        // Chequea si el personaje ya está en favoritos y actualiza el estado del checkBox.
         favoriteCheckBox.setChecked(isCharacterInFavorites(character.getId()));
 
+        // Listener para cambios en el estado del checkBox de favoritos.
         favoriteCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            // Inserta o elimina el personaje de la base de datos de favoritos según el estado del checkBox.
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
@@ -85,9 +96,31 @@ public class CharacterDetailsActivity extends AppCompatActivity {
             }
         });
 
-        // Resto del código...
+        // Botón de compartir y su lógica para enviar información del personaje a otras apps.
+        Button shareButton = findViewById(R.id.shareButton);
+        shareButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Obtiene la información del personaje nuevamente (puede que no sea necesario)
+                Character character = (Character) getIntent().getSerializableExtra("character");
+
+                // Crea un Intent para compartir el enlace del elemento en otras aplicaciones
+                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                shareIntent.setType("text/plain");
+                shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Detalles del personaje: " + character.getName());
+                shareIntent.putExtra(Intent.EXTRA_TEXT, "Nombre: " + character.getName() + "\n" +
+                        "Status: " + character.getStatus() + "\n" +
+                        "Species: " + character.getSpecies() + "\n" +
+                        "Gender: " + character.getGender() + "\n" +
+                        "Origin: " + character.getLocation().getName());
+
+                // Inicia la actividad para compartir
+                startActivity(Intent.createChooser(shareIntent, "Compartir detalles del personaje"));
+            }
+        });
     }
 
+    // Comprueba si el personaje está en favoritos.
     private boolean isCharacterInFavorites(int characterId) {
         SQLiteDatabase database = dbHelper.getReadableDatabase();
 
@@ -112,6 +145,7 @@ public class CharacterDetailsActivity extends AppCompatActivity {
         return isCharacterInFavorites;
     }
 
+    // Genera una representación HTML de los detalles del personaje.
     private String generateCharacterHtml(Character character) {
         String html = "<html><body>";
         if (character != null) {
