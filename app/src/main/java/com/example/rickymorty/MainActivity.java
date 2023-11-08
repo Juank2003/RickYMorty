@@ -7,7 +7,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.Toast;
@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Encuentra el botón para ver los personajes favoritos en la vista por su ID.
-        Button viewFavoritesButton = findViewById(R.id.viewFavoritesButton);
+       ImageButton viewFavoritesButton = findViewById(R.id.viewFavoritesButton);
 
         // Asigna un OnClickListener al botón que manejará el evento de clic del botón.
         viewFavoritesButton.setOnClickListener(new View.OnClickListener() {

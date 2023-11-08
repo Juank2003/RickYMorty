@@ -12,9 +12,9 @@ import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -97,7 +97,7 @@ public class CharacterDetailsActivity extends AppCompatActivity {
         });
 
         // Botón de compartir y su lógica para enviar información del personaje a otras apps.
-        Button shareButton = findViewById(R.id.shareButton);
+        ImageButton shareButton = findViewById(R.id.shareButton);
         shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

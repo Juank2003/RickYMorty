@@ -15,28 +15,33 @@
         tools:ignore="MissingConstraints" />
 
 
-    <Button
-        android:id="@+id/shareButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginEnd="148dp"
-        android:layout_marginBottom="32dp"
-        android:text="Compartir"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:ignore="MissingConstraints" />
     <!-- CheckBox para agregar/quitar de favoritos -->
+
     <CheckBox
         android:id="@+id/favoriteCheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginEnd="160dp"
-        android:layout_marginBottom="196dp"
         android:text="Favoritos"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.773"
+        tools:ignore="MissingConstraints" />
+
+    <ImageButton
+        android:id="@+id/shareButton"
+        android:layout_width="77dp"
+        android:layout_height="54dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/img_1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.918"
         tools:ignore="MissingConstraints" />
 
 
