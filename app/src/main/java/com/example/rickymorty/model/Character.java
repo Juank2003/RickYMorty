@@ -1,7 +1,8 @@
 // Character.java
-package com.example.rickymorty;
+package com.example.rickymorty.model;
 
 import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -17,10 +18,10 @@ public class Character implements Serializable {
     private String status;
     private String species;
     private String image;
-    private Location location; // Objeto para representar la ubicación actual del personaje
+    private Location location;
     private String gender;
     @SerializedName("origin")
-    private Location origin; // Objeto para representar la ubicación de origen del personaje
+    private Location origin;
     @SerializedName("episode")
     private List<String> episodeUrls; // URLs de los episodios en los que aparece el personaje
     private List<Episode> episodes; // Lista de objetos Episode, cada uno representa un episodio

@@ -1,5 +1,5 @@
-// Episode
-package com.example.rickymorty;
+// Episode.java
+package com.example.rickymorty.model;
 
 import com.google.gson.annotations.SerializedName;
 

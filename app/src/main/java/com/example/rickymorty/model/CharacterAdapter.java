@@ -1,5 +1,5 @@
 // CharacterAdapter.java
-package com.example.rickymorty;
+package com.example.rickymorty.model;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -10,11 +10,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
+import com.example.rickymorty.R;
+import com.example.rickymorty.UI.CharacterDetailsActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-// Adaptador para el RecyclerView que maneja la visualización de personajes.
+// Adaptador para el RecyclerView que maneja la visualización de objetos de la clase character.
 public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.CharacterViewHolder> {
     private Context context;
     private List<Character> characterList;
@@ -31,7 +33,7 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.Char
         notifyDataSetChanged();
     }
 
-    // Crea nuevas vistas (invocadas por el layout manager)
+    // Crea nuevas vistas
     @NonNull
     @Override
     public CharacterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

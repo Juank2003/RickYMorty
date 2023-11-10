@@ -1,5 +1,5 @@
-// MainActivity
-package com.example.rickymorty;
+// MainActivity.java
+package com.example.rickymorty.UI;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,12 +17,23 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.rickymorty.api.ApiClient;
+import com.example.rickymorty.api.RickAndMortyApi;
+import com.example.rickymorty.model.CharacterAdapter;
+import com.example.rickymorty.datastore.DataStore;
+import com.example.rickymorty.model.Character;
+import com.example.rickymorty.model.CharacterList;
+import com.example.rickymorty.model.Episode;
+import com.example.rickymorty.R;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -46,9 +57,8 @@ public class MainActivity extends AppCompatActivity {
     private String selectedStatus = "All";
     private List<Character> allCharacters = new ArrayList<>();
     private List<Character> filteredCharacters = new ArrayList<>();
-
-    // Gestor de preferencias para el tema de la aplicación
-    private ThemePreferenceManager themePreferenceManager;
+    private DataStore dataStoreSingleton;
+    private CompositeDisposable disposables = new CompositeDisposable();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,15 +71,13 @@ public class MainActivity extends AppCompatActivity {
         characterAdapter = new CharacterAdapter(this);
         recyclerView.setAdapter(characterAdapter);
 
-        // Inicializa ThemePreferenceManager
-        themePreferenceManager = new ThemePreferenceManager(this);
+        dataStoreSingleton = DataStore.getInstance(getApplicationContext());
 
         // Configura Retrofit para conectarte a la API de Rick and Morty
         retrofit = ApiClient.getClient();
         api = retrofit.create(RickAndMortyApi.class);
 
-        // Aplica el tema al iniciar la aplicación basándote en la preferencia guardada
-        applyTheme(themePreferenceManager.isDarkTheme());
+
 
         // Configuración del spinner para filtrar los personajes por estado
         statusSpinner = findViewById(R.id.statusSpinner);
@@ -77,14 +85,34 @@ public class MainActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         statusSpinner.setAdapter(adapter);
 
-        // Configura el Switch para el cambio de tema
-        Switch themeSwitch = findViewById(R.id.themeSwitch); // Asegúrate de que este ID coincide con tu layout
-        themeSwitch.setChecked(themePreferenceManager.isDarkTheme()); // Establece el estado inicial del Switch
+
+        // Configuración del switch para el cambio de tema de la aplicación.
+        Switch themeSwitch = findViewById(R.id.themeSwitch);
+
+        // Añadimos una suscripción al CompositeDisposable que observa los cambios en la configuración del tema.
+        // Esto se hace mediante la obtención de la configuración de tema actual desde DataStore.
+        disposables.add(
+                dataStoreSingleton.getThemeSetting() // Obtenemos el valor de la configuración del tema desde DataStore.
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(isDarkTheme -> {
+                            // Si se obtiene un valor, actualizamos el estado del switch y aplicamos el tema correspondiente.
+                            themeSwitch.setChecked(isDarkTheme);
+                            applyTheme(isDarkTheme);
+                        }, throwable -> {
+                            // En caso de un error al obtener la configuración del tema, se muestra un mensaje.
+                            Toast.makeText(MainActivity.this, "Error al cargar la configuración del tema", Toast.LENGTH_SHORT).show();
+                        })
+        );
+
+        // Configuramos un listener que reacciona cuando el estado del switch cambia (es decir, cuando el usuario lo toca).
         themeSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            // Guarda la preferencia del tema y aplica el tema seleccionado
-            themePreferenceManager.setDarkTheme(isChecked);
+            // Guardamos la nueva configuración del tema seleccionada por el usuario en DataStore.
+            dataStoreSingleton.saveThemeSetting(isChecked);
+            // Aplicamos el nuevo tema en tiempo real.
             applyTheme(isChecked);
         });
+
 
         // Establece un oyente de selección en el Spinner que permite al usuario filtrar personajes por estado.
         statusSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -210,15 +238,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    //Aplica el tema oscuro o claro en toda la aplicación en función del parámetro isDarkTheme.
     private void applyTheme(boolean isDarkTheme) {
-        // Comprueba si el tema oscuro está activo y cambia el modo de la interfaz de usuario.
-        if (isDarkTheme) {
-            // Establece el tema de la aplicación en el modo oscuro.
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        } else {
-            // Establece el tema de la aplicación en el modo claro.
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-        }
+        int themeMode = isDarkTheme ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO;
+        AppCompatDelegate.setDefaultNightMode(themeMode);
     }
 
     private void filterCharactersByStatus(String status) {

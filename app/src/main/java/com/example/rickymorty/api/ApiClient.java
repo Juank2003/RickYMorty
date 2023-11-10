@@ -1,10 +1,10 @@
 // ApiClient.java
-package com.example.rickymorty;
+package com.example.rickymorty.api;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-//Clase que crea una instancia de Retrofit. Utiliza el patrón Singleton para asegurar que solo se cree una instancia de Retrofit
+//Clase que crea una instancia de Retrofit.
 
 public class ApiClient {
     private static final String BASE_URL = "https://rickandmortyapi.com/api/";

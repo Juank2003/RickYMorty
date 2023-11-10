@@ -1,5 +1,5 @@
-// FavoriteCharactersActivity
-package com.example.rickymorty;
+// FavoriteCharactersActivity.java
+package com.example.rickymorty.UI;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -10,6 +10,13 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.rickymorty.api.ApiClient;
+import com.example.rickymorty.api.RickAndMortyApi;
+import com.example.rickymorty.db.FavoriteAdapter;
+import com.example.rickymorty.db.FavoriteCharacterDbHelper;
+import com.example.rickymorty.model.Character;
+import com.example.rickymorty.R;
 
 import java.util.ArrayList;
 import java.util.List;

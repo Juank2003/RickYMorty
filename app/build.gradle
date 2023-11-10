@@ -36,19 +36,22 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
-    // Gson convertir objetos Java en su representación JSON y viceversa.
+    // Gson para convertir objetos Java en su representación JSON y viceversa.
     implementation 'com.google.code.gson:gson:2.10.1'
-    // Glide  permite la carga y el almacenamiento de imágenes.
+    // Glide para la carga y el almacenamiento de imágenes.
     implementation 'com.github.bumptech.glide:glide:4.16.0'
 
     // Retrofit es un cliente que facilita la conexión a servicios web
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     // Convertidor Gson para Retrofit que permite la serialización y deserialización automática de solicitudes y respuestas.
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
-    // RxJava se usa para programación reactiva.
+    // RxJava para programación reactiva.
     implementation 'io.reactivex.rxjava2:rxjava:2.2.21'
-    // RxAndroid es una extensión específica de RxJava para Android que permite programar reactivamente en este entorno.
+    // RxAndroid es una extensión específica de RxJava para Android.
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
 
+    // DataStore Preferences para almacenar preferencias de usuario.
     implementation "androidx.datastore:datastore-preferences:1.0.0"
+    // RxJava2 para DataStore
+    implementation "androidx.datastore:datastore-preferences-rxjava2:1.0.0"
 }

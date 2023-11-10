@@ -1,5 +1,5 @@
-// CharacterDetailsActivity
-package com.example.rickymorty;
+// CharacterDetailsActivity.java
+package com.example.rickymorty.UI;
 
 import android.content.ContentValues;
 import android.content.Intent;
@@ -18,6 +18,10 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.rickymorty.db.FavoriteCharacterDbHelper;
+import com.example.rickymorty.model.Character;
+import com.example.rickymorty.R;
 
 // Esta actividad muestra los detalles de un personaje seleccionado.
 public class CharacterDetailsActivity extends AppCompatActivity {

@@ -1,5 +1,5 @@
 // Location.java
-package com.example.rickymorty;
+package com.example.rickymorty.model;
 
 import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;

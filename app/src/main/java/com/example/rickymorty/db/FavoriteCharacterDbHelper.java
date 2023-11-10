@@ -1,5 +1,5 @@
-//FavoriteCharacterDbHelper
-package com.example.rickymorty;
+//FavoriteCharacterDbHelper.java
+package com.example.rickymorty.db;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
